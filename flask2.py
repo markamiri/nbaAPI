@@ -62,5 +62,39 @@ def get_game_id():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
+
+@app.route('/test_connection', methods=['GET'])
+def test_connection():
+    try:
+        response = requests.get("https://stats.nba.com", timeout=10)
+        return jsonify({"status": "Success", "content": response.text[:200]})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/test_proxy', methods=['GET'])
+def test_proxy():
+    try:
+        proxy_url = "http://hxz9qgkiv1ihrxp-country-us:t6bbs2ddwi3qq8g@rp.scrapegw.com:6060"
+        response = requests.get(
+            "https://stats.nba.com",
+            proxies={"http": proxy_url, "https": proxy_url},
+            timeout=10
+        )
+        return jsonify({"status": "Proxy Working", "content": response.text[:200]})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/test_google', methods=['GET'])
+def test_google():
+    try:
+        response = requests.get("https://www.google.com", timeout=10)
+        return jsonify({"status": "Success"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
